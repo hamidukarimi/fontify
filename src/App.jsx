@@ -1,18 +1,12 @@
 // src/App.jsx
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React from "react";
 import Home from "./components/home/Home";
-import './app.css'
-
-
+import "./App.css";
 
 export default function App() {
-  
-
   return (
-   <>
-
-   <Home />
-   
-   </>
+    <>
+      <Home />
+    </>
   );
 }
