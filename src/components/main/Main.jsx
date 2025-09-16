@@ -32,7 +32,7 @@ function toCircled(text) {
     .join("");
 }
 
-// Math bold
+// Math bold (serif-like bold)
 function toMathBold(text) {
   return Array.from(text)
     .map((ch) => {
@@ -46,6 +46,25 @@ function toMathBold(text) {
       return ch;
     })
     .join("");
+}
+
+// New: Bold (all caps) — convenience 'popular' font
+function toBoldAllCaps(text) {
+  try {
+    return toMathBold(String(text).toUpperCase());
+  } catch {
+    return String(text).toUpperCase();
+  }
+}
+
+// New: Sans-bold (approximation: math bold applied after uppercasing then fullwidth fallback)
+function toSansBoldAllCaps(text) {
+  try {
+    // math bold works well as a bold glyph set; we uppercase first
+    return toMathBold(String(text).toUpperCase());
+  } catch {
+    return String(text).toUpperCase();
+  }
 }
 
 // Reverse
@@ -296,11 +315,31 @@ function toBoxed(text) {
   return `${top}\n${mid}\n${bottom}`;
 }
 
+// Simple case transforms (popular/commonly used)
+function toUpper(text) {
+  return String(text).toUpperCase();
+}
+function toLower(text) {
+  return String(text).toLowerCase();
+}
+function toTitleCase(text) {
+  return String(text)
+    .split(" ")
+    .map((w) => (w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w))
+    .join(" ");
+}
+
 /* ============================
    Styles registry
    ============================ */
 
+// Note: we add several popular "fonts" / styles at the top so they appear first
 const STYLES = [
+  { id: "bold_allcaps", name: "Bold (ALL CAPS)", fn: toBoldAllCaps },
+  { id: "bold", name: "Bold (math)", fn: toMathBold },
+  { id: "sans_bold_allcaps", name: "Sans Bold (ALL CAPS)", fn: toSansBoldAllCaps },
+  { id: "uppercase", name: "Uppercase", fn: toUpper },
+  { id: "title", name: "Title Case", fn: toTitleCase },
   { id: "fullwidth", name: "Fullwidth", fn: toFullwidth },
   { id: "circled", name: "Circled", fn: toCircled },
   { id: "mathbold", name: "Math bold", fn: toMathBold },
@@ -447,10 +486,13 @@ export default function Main() {
   return (
     <motion.div
       ref={containerRef}
-      className="relative min-h-screen bg-transparent flex items-start justify-center py-6  mt-20"
+      className="relative min-h-screen bg-transparent flex items-start justify-center px-4 py-6  mt-20"
     >
-      <section className="absolute top-0 left-4 right-4 ">
-        <BulletsAnimation />
+
+       {/* Decorative bullets positioned absolutely behind content */}
+    <BulletsAnimation className="absolute inset-0 z-0 pointer-events-none" />
+      <section className="w-full max-w-xl relative z-10 ">
+        
         <div className=" w-full max-w-xl relative">
           {/* Text input */}
           <motion.textarea
@@ -497,7 +539,7 @@ export default function Main() {
             </div>
 
             <div className="text-xs text-gray-400">
-              Bookmarks:{" "}
+              Bookmarks: {" "}
               <span className="text-gray-200">{favorites.length}</span>
             </div>
           </motion.div>
