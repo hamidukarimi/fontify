@@ -6,30 +6,35 @@ import TestimonialCard from "./TestimonialCard";
 const defaultTestimonials = [
   {
     id: 1,
-    avatar:
-      "https://i.pinimg.com/736x/57/a6/83/57a683ac42a232c3331e5ac54b797c10.jpg",
-    name: "Ahmad Khan",
-    role: "Student",
+    avatar: "./naeem.jpeg",
+    name: "Naeem Hashemi",
+    role: "CEO at Hashemi web services",
     rating: 5,
-    text: "Lorem Ispu doller amit sign more than teh things i really thinking about this in the world about this in the world about this in the world in the world in the world.",
+    text: "Super simple and fast. I use this website usually for my presentations titles and it always catches more attention.",
   },
   {
     id: 2,
-    avatar:
-      "https://i.pinimg.com/736x/57/a6/83/57a683ac42a232c3331e5ac54b797c10.jpg",
-    name: "Sana Noor",
-    role: "Designer",
+    avatar: "./erfan.jpg",
+    name: "Erfan Rahmatzai",
+    role: "Front-End developer",
     rating: 5,
-    text: "Great experience — the UI is neat and the learning path made it easy for me to get started. Highly recommended for beginners and pros alike.",
+    text: "fontify made my Instagram posts stand out instantly. I love how quickly I can transform plain text into stylish fonts",
   },
   {
     id: 3,
-    avatar:
-      "https://i.pinimg.com/736x/57/a6/83/57a683ac42a232c3331e5ac54b797c10.jpg",
-    name: "Emma Carter",
-    role: "Student",
+    avatar: "./zakir.jpeg",
+    name: "Zakirullah Aminy",
+    role: "Student at Upskill",
     rating: 5,
-    text: "This helped me so much. The content is concise and practical — I finished a whole section in one sitting!",
+    text: "To be honest, I’ve been using fancy text websites for my designs for a long time and tried a lot of text generators, but fontify feels the smoothest. It caught my attention because of its beautiful UI.",
+  },
+   {
+    id: 4,
+    avatar: "./sarah.jpg",
+    name: "Sarah M",
+    role: "Graphic Designer",
+    rating: 5,
+    text: "Changing fonts for my bio and captions has never been easier. I used to think I needed to add symbols around my words, but Fontify saves me so much time.",
   },
 ];
 
