@@ -7,6 +7,8 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa";
 import { MdHome } from "react-icons/md";
+import { Link } from "react-router-dom";
+
 
 /**
  * Footer.jsx
@@ -28,12 +30,14 @@ export default function Footer() {
         <p className="mt-3 text-sm text-[#bdbdbd]">
           Need help? We're always here for you. lorem
         </p>
+        <Link to="/contact">
         <button
           type="button"
           className="mt-6 inline-block px-5 py-2.5 rounded-md bg-[#098989] text-white text-sm font-medium shadow-[0_6px_18px_rgba(3,8,12,0.5)] hover:bg-[#0b9a9a] focus:outline-none focus:ring-2 focus:ring-white/20"
         >
           Contact Us
         </button>
+        </Link>
       </div>
 
       {/* Thin separator */}

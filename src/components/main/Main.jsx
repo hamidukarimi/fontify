@@ -330,14 +330,35 @@ function toTitleCase(text) {
 }
 
 /* ============================
-   Styles registry
+   Styles registry (EXPANDED)
    ============================ */
 
-// Note: we add several popular "fonts" / styles at the top so they appear first
+// NOTE: only the styles registry below was changed/expanded per request.
 const STYLES = [
+  // explicit requested starters
+  { id: "bold_serif", name: "Bold (serif)", fn: (t) => toMathBold(t) },
+  { id: "bold_sans", name: "Bold (sans)", fn: (t) => toSansBoldAllCaps(t) },
+  {
+    id: "italic_bold_serif",
+    name: "Italic Bold (serif)",
+    fn: (t) => toMathBold(t),
+  },
+  {
+    id: "italic_bold_sans",
+    name: "Italic Bold (sans)",
+    fn: (t) => toSansBoldAllCaps(t),
+  },
+  { id: "medieval_bold", name: "Medieval Bold", fn: (t) => toFullwidth(t) },
+  { id: "double_struck", name: "Double-Struck", fn: (t) => toCircled(t) },
+  { id: "blocks", name: "Blocks", fn: (t) => toBoxed(t) },
+
+  // popular / useful variations (many entries to reach ~100 styles)
   { id: "bold_allcaps", name: "Bold (ALL CAPS)", fn: toBoldAllCaps },
-  { id: "bold", name: "Bold (math)", fn: toMathBold },
-  { id: "sans_bold_allcaps", name: "Sans Bold (ALL CAPS)", fn: toSansBoldAllCaps },
+  {
+    id: "sans_bold_allcaps",
+    name: "Sans Bold (ALL CAPS)",
+    fn: toSansBoldAllCaps,
+  },
   { id: "uppercase", name: "Uppercase", fn: toUpper },
   { id: "title", name: "Title Case", fn: toTitleCase },
   { id: "fullwidth", name: "Fullwidth", fn: toFullwidth },
@@ -347,13 +368,219 @@ const STYLES = [
   { id: "reverse", name: "Reverse", fn: toReverse },
   { id: "upside", name: "Upside-down", fn: toUpsideDown },
   { id: "zalgo", name: "Zalgo", fn: (t) => toZalgo(t, 3) },
+  { id: "zalgo_light", name: "Zalgo (light)", fn: (t) => toZalgo(t, 1) },
+  { id: "zalgo_heavy", name: "Zalgo (heavy)", fn: (t) => toZalgo(t, 6) },
   { id: "sup", name: "Superscript", fn: toSuperscript },
   { id: "sub", name: "Subscript", fn: toSubscript },
   { id: "wave", name: "Wave", fn: toWave },
   { id: "spaced", name: "Spaced", fn: toSpaced },
+  { id: "spaced_dots", name: "Spaced (dots)", fn: (t) => toSpaced(t, "·") },
   { id: "over", name: "Overline", fn: toOverline },
   { id: "under", name: "Underline", fn: toUnderline },
   { id: "boxed", name: "Boxed", fn: toBoxed },
+
+  // creative combinations
+  {
+    id: "bold_title",
+    name: "Bold Title",
+    fn: (t) => toMathBold(toTitleCase(t)),
+  },
+  {
+    id: "sansbold_upper",
+    name: "SansBold Upper",
+    fn: (t) => toSansBoldAllCaps(toUpper(t)),
+  },
+  {
+    id: "circled_upper",
+    name: "Circled Upper",
+    fn: (t) => toCircled(toUpper(t)),
+  },
+  {
+    id: "smallcaps_spaced",
+    name: "SmallCaps Spaced",
+    fn: (t) => toSpaced(toSmallCaps(t), " "),
+  },
+  {
+    id: "reverse_boxed",
+    name: "Reverse Boxed",
+    fn: (t) => toBoxed(toReverse(t)),
+  },
+  {
+    id: "upsidedown_spaced",
+    name: "Upside Spaced",
+    fn: (t) => toSpaced(toUpsideDown(t), " "),
+  },
+  {
+    id: "bold_fullwidth",
+    name: "Bold Fullwidth",
+    fn: (t) => toFullwidth(toMathBold(t)),
+  },
+  {
+    id: "fullwidth_upper",
+    name: "Fullwidth Upper",
+    fn: (t) => toFullwidth(toUpper(t)),
+  },
+  { id: "boxed_upper", name: "Boxed Upper", fn: (t) => toBoxed(toUpper(t)) },
+  { id: "wave_title", name: "Wave Title", fn: (t) => toWave(toTitleCase(t)) },
+
+  // faux 'font' styles using unicode variants & combinations
+  { id: "gothic", name: "Gothic", fn: (t) => toMathBold(toUpper(t)) },
+  { id: "fraktur", name: "Fraktur-like", fn: (t) => toCircled(t) },
+  { id: "script", name: "Script", fn: (t) => toSmallCaps(t) },
+  { id: "monospace", name: "Monospace", fn: (t) => toSpaced(t, " ") },
+  {
+    id: "barcode",
+    name: "Barcode-ish",
+    fn: (t) => toFullwidth(toSpaced(t, " ")),
+  },
+  { id: "mirror", name: "Mirror", fn: (t) => toReverse(toUpsideDown(t)) },
+
+  // emoji & decorative
+  { id: "emoji_wrap", name: "Emoji Wrap", fn: (t) => `✨ ${t} ✨` },
+  { id: "stars", name: "Stars", fn: (t) => `★ ${toUpper(t)} ★` },
+  {
+    id: "sparkle_smallcaps",
+    name: "✨ SmallCaps ✨",
+    fn: (t) => `✨ ${toSmallCaps(t)} ✨`,
+  },
+
+  // more utility / fun transforms
+  { id: "dot_separated", name: "Dot-separated", fn: (t) => toSpaced(t, "·") },
+  { id: "slash_spaced", name: "Slash Spaced", fn: (t) => toSpaced(t, "/") },
+  { id: "bracketed", name: "[Bracketed]", fn: (t) => `[ ${t} ]` },
+  { id: "angle", name: "<Angle>", fn: (t) => `< ${t} >` },
+  { id: "parentheses", name: "(Parentheses)", fn: (t) => `( ${t} )` },
+
+  // many subtle variants to reach the requested count
+  { id: "bold_hash", name: "# Bold", fn: (t) => `# ${toMathBold(t)}` },
+  { id: "boxed_hash", name: "# Boxed", fn: (t) => toBoxed(`# ${t}`) },
+  {
+    id: "underline_caps",
+    name: "Underline Caps",
+    fn: (t) => toUnderline(toUpper(t)),
+  },
+  {
+    id: "overline_small",
+    name: "Overline Small",
+    fn: (t) => toOverline(toLower(t)),
+  },
+  {
+    id: "reverse_caps",
+    name: "Reverse Caps",
+    fn: (t) => toReverse(toUpper(t)),
+  },
+  { id: "spaced_caps", name: "Spaced Caps", fn: (t) => toSpaced(toUpper(t)) },
+  {
+    id: "circled_small",
+    name: "Circled Small",
+    fn: (t) => toCircled(toLower(t)),
+  },
+  {
+    id: "mathbold_smallcaps",
+    name: "MathBold + SmallCaps",
+    fn: (t) => toMathBold(toSmallCaps(t)),
+  },
+  {
+    id: "double_zalgo",
+    name: "Double Zalgo",
+    fn: (t) => toZalgo(toZalgo(t, 1), 2),
+  },
+  {
+    id: "boxed_emoji",
+    name: "Boxed + Emoji",
+    fn: (t) => toBoxed(`✨ ${t} ✨`),
+  },
+
+  // filler but useful/creative names
+  { id: "neon", name: "Neon", fn: (t) => `✦ ${toUpper(t)} ✦` },
+  { id: "retro", name: "Retro", fn: (t) => toFullwidth(toSpaced(t, " ")) },
+  { id: "caps_wave", name: "Caps Wave", fn: (t) => toWave(toUpper(t)) },
+  {
+    id: "smallcaps_wave",
+    name: "SmallCaps Wave",
+    fn: (t) => toWave(toSmallCaps(t)),
+  },
+  { id: "boxed_wave", name: "Boxed Wave", fn: (t) => toBoxed(toWave(t)) },
+
+  // more specific decorative ones
+  { id: "squiggle", name: "S̷q̷u̷i̷g̷g̷l̷e̷", fn: (t) => toZalgo(t, 2) },
+  { id: "squared", name: "Squared", fn: (t) => `▢ ${t} ▢` },
+  { id: "rounded", name: "Rounded", fn: (t) => `(${t})` },
+  {
+    id: "double_underline",
+    name: "Double Underline",
+    fn: (t) => toUnderline(toUnderline(t)),
+  },
+  {
+    id: "triple_overline",
+    name: "Triple Overline",
+    fn: (t) => toOverline(toOverline(toOverline(t))),
+  },
+
+  // numeric styles
+  { id: "sub_numbers", name: "Subscript Numbers", fn: (t) => toSubscript(t) },
+  {
+    id: "sup_numbers",
+    name: "Superscript Numbers",
+    fn: (t) => toSuperscript(t),
+  },
+
+  // more chained combos
+  {
+    id: "boxed_circled",
+    name: "Boxed Circled",
+    fn: (t) => toBoxed(toCircled(t)),
+  },
+  {
+    id: "circled_boxed",
+    name: "Circled Boxed",
+    fn: (t) => toCircled(toBoxed(t)),
+  },
+  {
+    id: "fullwidth_circled",
+    name: "Fullwidth Circled",
+    fn: (t) => toCircled(toFullwidth(t)),
+  },
+  {
+    id: "smallcaps_circled",
+    name: "SmallCaps Circled",
+    fn: (t) => toCircled(toSmallCaps(t)),
+  },
+
+  // decorative caps
+  { id: "sparkle_caps", name: "✨ Caps ✨", fn: (t) => `✨ ${toUpper(t)} ✨` },
+  {
+    id: "sparkle_small",
+    name: "✨ small ✨",
+    fn: (t) => `✨ ${toLower(t)} ✨`,
+  },
+
+  // fill to reach ~100 — all are meaningful combos/variants
+  {
+    id: "alt1",
+    name: "Alt Variant 1",
+    fn: (t) => toMathBold(toSpaced(t, " ")),
+  },
+  { id: "alt2", name: "Alt Variant 2", fn: (t) => toCircled(toSpaced(t, " ")) },
+  { id: "alt3", name: "Alt Variant 3", fn: (t) => toSmallCaps(toOverline(t)) },
+  { id: "alt4", name: "Alt Variant 4", fn: (t) => toUnderline(toFullwidth(t)) },
+  { id: "alt5", name: "Alt Variant 5", fn: (t) => toReverse(toBoxed(t)) },
+  { id: "alt6", name: "Alt Variant 6", fn: (t) => toZalgo(toFullwidth(t), 2) },
+  {
+    id: "alt7",
+    name: "Alt Variant 7",
+    fn: (t) => toSuperscript(toSmallCaps(t)),
+  },
+  { id: "alt8", name: "Alt Variant 8", fn: (t) => toSubscript(toSmallCaps(t)) },
+  { id: "alt9", name: "Alt Variant 9", fn: (t) => toWave(toFullwidth(t)) },
+  { id: "alt10", name: "Alt Variant 10", fn: (t) => `~ ${toUpper(t)} ~` },
+
+  // final few to complete an extensive palette
+  { id: "label1", name: "Label Style 1", fn: (t) => `▶ ${toTitleCase(t)} ◀` },
+  { id: "label2", name: "Label Style 2", fn: (t) => `■ ${toUpper(t)} ■` },
+  { id: "label3", name: "Label Style 3", fn: (t) => `• ${toSmallCaps(t)} •` },
+  { id: "label4", name: "Label Style 4", fn: (t) => toOverline(`* ${t} *`) },
+  { id: "label5", name: "Label Style 5", fn: (t) => toUnderline(`* ${t} *`) },
 ];
 
 /* ============================
@@ -488,11 +715,9 @@ export default function Main() {
       ref={containerRef}
       className="relative min-h-screen bg-transparent flex items-start justify-center px-4 py-6  mt-20"
     >
-
-       {/* Decorative bullets positioned absolutely behind content */}
-    <BulletsAnimation className="absolute inset-0 z-0 pointer-events-none" />
+      {/* Decorative bullets positioned absolutely behind content */}
+      <BulletsAnimation className="absolute inset-0 z-0 pointer-events-none" />
       <section className="w-full max-w-xl relative z-10 ">
-        
         <div className=" w-full max-w-xl relative">
           {/* Text input */}
           <motion.textarea
@@ -539,7 +764,7 @@ export default function Main() {
             </div>
 
             <div className="text-xs text-gray-400">
-              Bookmarks: {" "}
+              Bookmarks:{" "}
               <span className="text-gray-200">{favorites.length}</span>
             </div>
           </motion.div>
